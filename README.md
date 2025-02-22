@@ -10,30 +10,30 @@ A command-line tool that converts text to speech using OpenAI's TTS API.
 - Automatically copies audio file reference to clipboard
 - Saves audio files locally for backup and reuse
 
-## Installation
+## Quick Install
 
-1. Clone this repository
-2. Install dependencies:
+1. Clone and install globally:
    ```bash
+   git clone https://github.com/yourusername/tts.git
+   cd tts
    npm install
-   ```
-3. Set your OpenAI API key:
-   ```bash
-   export OPENAI_API_KEY='your-api-key-here'
-   ```
-4. Make the command globally available (optional):
-   ```bash
    npm link
    ```
 
+2. Add OpenAI API key to your shell configuration:
+   ```bash
+   # For zsh (macOS default)
+   echo 'export OPENAI_API_KEY="your-openai-api-key-here"' >> ~/.zshrc
+   
+   # Load the new environment variable
+   source ~/.zshrc
+   ```
+
+That's it! Now you can use the `tts` command from anywhere.
+
 ## Usage
 
-Basic usage:
-```bash
-node index.js "Your text to convert to speech"
-```
-
-Or if globally installed:
+Convert text to speech:
 ```bash
 tts "Your text to convert to speech"
 ```
