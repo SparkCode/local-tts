@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import OpenAI from 'openai';
 import fs from 'fs';
 import path from 'path';
@@ -23,7 +24,8 @@ if (!inputText) {
 }
 
 const openai = new OpenAI();
-// Generate filename from text input
+
+// Helper function to sanitize filename
 const sanitizeFilename = (text) => 
     text.slice(0, 40)
         .replace(/[^a-z0-9]/gi, '-')
@@ -31,6 +33,7 @@ const sanitizeFilename = (text) =>
         .replace(/^-|-$/g, '')
         .toLowerCase();
 
+// Generate filename with timestamp
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 const filename = `${sanitizeFilename(inputText)}-${timestamp}.mp3`;
 const speechFile = path.resolve(__dirname, filename);
@@ -43,21 +46,34 @@ async function convertTextToSpeech() {
         // Select random voice
         const randomVoice = voices[Math.floor(Math.random() * voices.length)];
         console.log(`Converting text to speech using voice: ${randomVoice}...`);
-        
+
+        // Generate speech with OpenAI
         const mp3 = await openai.audio.speech.create({
             model: "tts-1",
             voice: randomVoice,
             input: inputText,
         });
 
+        // Save the audio file
         console.log('Saving audio file...');
         const buffer = Buffer.from(await mp3.arrayBuffer());
         await fs.promises.writeFile(speechFile, buffer);
         
-        // Copy file to clipboard using osascript
+        // Create and copy to temporary file for clipboard
+        const tempFile = path.resolve(__dirname, '.temp.mp3');
+        await fs.promises.copyFile(speechFile, tempFile);
+        
+        // Copy to clipboard using osascript
         const { exec } = await import('child_process');
-        const copyCmd = `osascript -e 'set the clipboard to (read (POSIX file "${speechFile}") as «class MpTr»)'`;
-        exec(copyCmd, (error) => {
+        const copyCmd = `osascript -e 'set the clipboard to (read (POSIX file "${tempFile}") as «class MpTr»)'`;
+        exec(copyCmd, async (error) => {
+            // Clean up temp file
+            try {
+                await fs.promises.unlink(tempFile);
+            } catch (cleanupError) {
+                console.warn('Warning: Could not clean up temporary file');
+            }
+            
             if (error) {
                 console.warn('Warning: Could not copy audio file to clipboard');
             } else {
