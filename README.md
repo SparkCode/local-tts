@@ -1,13 +1,13 @@
-# Text-to-Speech CLI with Anki Integration
+# Text-to-Speech CLI
 
-A command-line tool that converts text to speech using OpenAI's TTS API, designed specifically for creating audio files for Anki flashcards.
+A command-line tool that converts text to speech using OpenAI's TTS API.
 
 ## Features
 
 - Converts text to natural-sounding speech using OpenAI's TTS API
 - Randomly selects from multiple voices (alloy, echo, fable, onyx, nova, shimmer)
 - Generates organized filenames with text preview and timestamp
-- Automatically copies audio to clipboard for easy pasting into Anki
+- Automatically copies audio file reference to clipboard
 - Saves audio files locally for backup and reuse
 
 ## Installation
@@ -38,21 +38,13 @@ Or if globally installed:
 tts "Your text to convert to speech"
 ```
 
-### Anki Integration
-
-1. Run the command with your desired text
-2. Switch to Anki
-3. Create or edit a card
-4. Paste (⌘V) directly into any field - the file will be imported
-5. The MP3 file remains in the assets directory for backup
-
 ## Output
 
 - Files are saved in the `assets` directory with descriptive names:
   ```
   assets/your-text-YYYY-MM-DDTHH-mm-ss.mp3
   ```
-- File reference is copied to clipboard for direct import into Anki
+- File reference is copied to clipboard
 - Progress and status messages are displayed during conversion
 - Files are organized by text content and timestamp
 
