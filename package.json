@@ -1,0 +1,19 @@
+{
+  "name": "tts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "tts": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "A command line tool to convert text to speech using OpenAI's TTS API",
+  "dependencies": {
+    "openai": "^4.85.3"
+  }
+}
