@@ -33,10 +33,16 @@ const sanitizeFilename = (text) =>
         .replace(/^-|-$/g, '')
         .toLowerCase();
 
+// Ensure assets directory exists
+const assetsDir = path.resolve(__dirname, 'assets');
+if (!fs.existsSync(assetsDir)) {
+    fs.mkdirSync(assetsDir, { recursive: true });
+}
+
 // Generate filename with timestamp
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 const filename = `${sanitizeFilename(inputText)}-${timestamp}.mp3`;
-const speechFile = path.resolve(__dirname, filename);
+const speechFile = path.resolve(assetsDir, filename);
 
 // Available voices
 const voices = ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer'];
@@ -59,25 +65,14 @@ async function convertTextToSpeech() {
         const buffer = Buffer.from(await mp3.arrayBuffer());
         await fs.promises.writeFile(speechFile, buffer);
         
-        // Create and copy to temporary file for clipboard
-        const tempFile = path.resolve(__dirname, '.temp.mp3');
-        await fs.promises.copyFile(speechFile, tempFile);
-        
-        // Copy to clipboard using osascript
+        // Copy file reference to clipboard using AppleScript
         const { exec } = await import('child_process');
-        const copyCmd = `osascript -e 'set the clipboard to (read (POSIX file "${tempFile}") as «class MpTr»)'`;
-        exec(copyCmd, async (error) => {
-            // Clean up temp file
-            try {
-                await fs.promises.unlink(tempFile);
-            } catch (cleanupError) {
-                console.warn('Warning: Could not clean up temporary file');
-            }
-            
+        const copyCmd = `osascript -e 'set the clipboard to (POSIX file "${speechFile}")'`;
+        exec(copyCmd, (error) => {
             if (error) {
-                console.warn('Warning: Could not copy audio file to clipboard');
+                console.warn('Warning: Could not copy file reference to clipboard');
             } else {
-                console.log('Audio file copied to clipboard');
+                console.log('File reference copied to clipboard');
             }
         });
         

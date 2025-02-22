@@ -43,14 +43,18 @@ tts "Your text to convert to speech"
 1. Run the command with your desired text
 2. Switch to Anki
 3. Create or edit a card
-4. Paste (⌘V) directly into any field - the audio will be embedded
-5. The MP3 file is also saved locally with a descriptive name
+4. Paste (⌘V) directly into any field - the file will be imported
+5. The MP3 file remains in the assets directory for backup
 
 ## Output
 
-- Files are saved with descriptive names: `your-text-YYYY-MM-DDTHH-mm-ss.mp3`
-- Audio is automatically copied to clipboard for immediate use
+- Files are saved in the `assets` directory with descriptive names:
+  ```
+  assets/your-text-YYYY-MM-DDTHH-mm-ss.mp3
+  ```
+- File reference is copied to clipboard for direct import into Anki
 - Progress and status messages are displayed during conversion
+- Files are organized by text content and timestamp
 
 ## Requirements
 
